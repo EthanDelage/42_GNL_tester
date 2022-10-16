@@ -6,7 +6,7 @@
 /*   By: edelage <edelage@student.42lyon.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/14 22:15:55 by edelage           #+#    #+#             */
-/*   Updated: 2022/10/14 23:49:06 by edelage          ###   ########lyon.fr   */
+/*   Updated: 2022/10/16 01:17:23 by edelage          ###   ########lyon.fr   */
 /*                                                                            */
 /* ************************************************************************** */
 #include <stdio.h>
@@ -15,6 +15,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "get_next_line.h"
+#include "ld.h"
 #ifndef NB_CALL_GET_NEXT_LINE
 # define NB_CALL_GET_NEXT_LINE	50
 #endif
@@ -85,6 +86,9 @@ int	main(int argc, char **argv)
 				free(line_gnl);
 			if (real_line != NULL)
 				free(real_line);
+			if (have_leaks() == 1)
+				// Return Fail with leaks
+				return (3);
 			// Return Fail
 			return (1);
 		}
@@ -97,6 +101,9 @@ int	main(int argc, char **argv)
 	/*==== Close file ====*/
 	fclose(file);
 	close(fd);
-	// Return Success
+	if (have_leaks() == 1)
+		// Return Success with leaks
+		return (4);
+	// Return Success without leaks
 	return (0);
 }
