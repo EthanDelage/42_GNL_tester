@@ -30,6 +30,8 @@ gnl_bonus_files="${GNL_Path}get_next_line_bonus.c ${GNL_Path}get_next_line_utils
 
 man_test_file="gnl_test_mandatory.c"
 
+invalid_fd="gnl_test_man_invalid_fd.c"
+
 bonus_test="gnl_test_bonus.c"
 
 ##############################
@@ -113,6 +115,10 @@ function table_empty {
 function table_header {
 	echo -e "    ${BMagenta}BUFFER_SIZE${White} | ${BBlueL}Result test${White} |  ${BYellow}Leaks${White}"
 	table_empty
+}
+
+function table_header_call_gnl {
+	echo -e "    ${BMagenta}NB_CALL_GNL${White} | ${BBlueL}Result test${White} |  ${BYellow}Leaks${White}"
 }
 
 function table_line {
@@ -202,6 +208,38 @@ function test_file {
 	fi
 }
 
+function compile_invalid_fd {
+	is_int "$1"
+	if [ $? = 1 ]; then
+		is_int "$2"
+		if [ $? = 1 ]; then
+			gcc -Wall -Wextra -Werror ${gnl_files} ${ld_file} ${invalid_fd} -I${GNL_Path} -I${LD_Path} -I. -D NB_CALL_GET_NEXT_LINE=$1 -D BUFFER_SIZE=$2 -o test_invalid_fd
+		else
+			gcc -Wall -Wextra -Werror ${gnl_files} ${ld_file} ${invalid_fd} -I${GNL_Path} -I${LD_Path} -I. -D NB_CALL_GET_NEXT_LINE=$1 -o test_invalid_fd
+		fi
+	else
+		gcc -Wall -Wextra -Werror ${gnl_files} ${ld_file} ${invalid_fd} -I${GNL_Path} -I${LD_Path} -I. -o test_invalid_fd
+	fi
+}
+
+function tests_invalid_fd {
+	echo -e "\n"
+	echo -e "${BUCyan}Test invalid fd:${White}\n"
+	table_header
+	compile_invalid_fd 1 42
+	./test_invalid_fd
+	table_line 42 $?
+	compile_invalid_fd 42 42
+	./test_invalid_fd
+	table_line 42 $?
+	compile_invalid_fd 42 1
+	./test_invalid_fd
+	table_line 1 $?
+	compile_invalid_fd 12 10
+	./test_invalid_fd
+	table_line 10 $?
+}
+
 function mandatory_test {
 	echo -e "${BUBlue}Tests for mandatory part:${White}\n"
 	check_man_file
@@ -211,6 +249,8 @@ function mandatory_test {
 		echo -e "\n"
 	done
 	rm -f man_test_part1
+	tests_invalid_fd
+	rm -f test_invalid_fd
 }
 
 ##############################
@@ -237,14 +277,12 @@ function bonus_test {
 #                                                                              #
 ################################################################################
 clear
+launch_norminette
 if [ "$1" = "m" ]; then
-	launch_norminette
 	mandatory_test
 elif [ "$1" = "b" ]; then
-	launch_norminette
 	bonus_test
 else
-	launch_norminette
 	mandatory_test
 	echo -e "\n\n"
 	bonus_test
