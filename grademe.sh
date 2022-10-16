@@ -30,7 +30,9 @@ gnl_bonus_files="${GNL_Path}get_next_line_bonus.c ${GNL_Path}get_next_line_utils
 
 man_test_file="gnl_test_mandatory.c"
 
-invalid_fd="gnl_test_man_invalid_fd.c"
+invalid_fd="gnl_test_invalid_fd.c"
+
+invalid_buf_size="gnl_test_invalid_buffer_size.c"
 
 bonus_test="gnl_test_bonus.c"
 
@@ -82,7 +84,7 @@ function print_error {
 
 function is_int {
 	re='^[0-9]+$'
-	if ! [[ $1 =~ $re ]] ; then
+	if ! [[ $1 =~ $re ]]; then
 		#is not an integer
 		return 0
 	else
@@ -240,6 +242,24 @@ function tests_invalid_fd {
 	table_line 10 $?
 }
 
+function compile_invalid_buf_size {
+	is_int $1
+	if [ $? = 1 ]; then
+		gcc -Wall -Wextra -Werror ${gnl_files} ${ld_file} ${invalid_buf_size} -I${GNL_Path} -I${LD_Path} -I. -D BUFFER_SIZE=$1 -o test_invalid_buf_size
+	else
+		gcc -Wall -Wextra -Werror ${gnl_files} ${ld_file} ${invalid_buf_size} -I${GNL_Path} -I${LD_Path} -I. -o test_invalid_buf_size
+	fi
+}
+
+function tests_invalid_buf_size {
+	echo -e "\n"
+	echo -e "${BUCyan}Test invalid BUFFER_SIZE:${White}\n"
+	table_header
+	compile_invalid_buf_size 0
+	./test_invalid_buf_size
+	table_line 0 $?
+}
+
 function mandatory_test {
 	echo -e "${BUBlue}Tests for mandatory part:${White}\n"
 	check_man_file
@@ -251,6 +271,8 @@ function mandatory_test {
 	rm -f man_test_part1
 	tests_invalid_fd
 	rm -f test_invalid_fd
+	tests_invalid_buf_size
+	rm -f test_invalid_buf_size
 }
 
 ##############################
