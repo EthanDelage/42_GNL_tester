@@ -1,5 +1,7 @@
 # 42_GNL_tester
-the goal of this project is to test your get_next_line function
+The goal of this project is to test your get_next_line function
+
+**DISCLAIMER** : It is a tool, so automatic tests are not enough to validate a correction, remember to check everything yourself.
 
 ### Clone this repo
 ```shell
