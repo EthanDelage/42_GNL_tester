@@ -40,7 +40,7 @@ bonus_test="gnl_test_bonus.c"
 #	Colors
 ##############################
 
-White='\033[0;37m'
+White='\033[0;39m'
 BUWhite='\e[1;4m'
 BRed='\033[1;31m'
 BGreen='\033[1;92m'
