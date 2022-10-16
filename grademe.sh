@@ -10,7 +10,7 @@
 
 GNL_Path="../GNL/"
 
-LD_Path="leak_detector/"
+LD_Path="detector_leak/"
 
 FILE_Path="file/"
 
@@ -19,6 +19,10 @@ FILE_Path="file/"
 ##############################
 
 ld_file="${LD_Path}leak_detector.c"
+
+file_man_part="${FILE_Path}fd_Simple_Input ${FILE_Path}fd_Line_Length \
+	${FILE_Path}fd_Empty_Line ${FILE_Path}fd_One_Line \
+	${FILE_Path}fd_Empty_File ${FILE_Path}fd_Null_End"
 
 gnl_files="${GNL_Path}get_next_line.c ${GNL_Path}get_next_line_utils.c"
 
@@ -33,11 +37,16 @@ bonus_test="gnl_test_bonus.c"
 ##############################
 
 White='\033[0;37m'
+BUWhite='\e[1;4m'
 BRed='\033[1;31m'
-BGreen='\033[1;32m'
+BGreen='\033[1;92m'
 BYellow='\033[1;93m'
 BBlue='\033[1;34m'
+BBlueL='\e[1;94m'
+BUBlue='\e[1;4;34m'
+BUCyan='\e[1;4;36m'
 BGrey='\e[1;90m'
+BMagenta='\e[1;35m'
 
 ################################################################################
 #                                                                              #
@@ -80,16 +89,29 @@ function is_int {
 	fi
 }
 
+function launch_norminette {
+	echo -e "${BUBlue}Run norminette:${White} "
+	norminette ${GNL_Path}* > /dev/null
+	if [ $? = 127 ]; then
+		echo -e "     ${BYellow}[NOT_FOUND]${White}"
+	elif [ $? = 0 ]; then
+		echo -e "     ${BGreen}[OK]${White}"
+	elif [ $? = 1 ]; then
+		echo -e "     ${BRed}[KO]${White}"
+	fi
+	echo -e "\n"
+}
+
 ##############################
 #	Table Functions
 ##############################
 
 function table_empty {
-	echo -e "                |             |      "
+	echo -e "                |             |"
 }
 
 function table_header {
-	echo -e "    BUFFER_SIZE | Result test |  Leaks"
+	echo -e "    ${BMagenta}BUFFER_SIZE${White} | ${BBlueL}Result test${White} |  ${BYellow}Leaks${White}"
 	table_empty
 }
 
@@ -155,8 +177,9 @@ function compile_man_test {
 
 function test_file {
 	if [ -e "$1" ]; then
-		echo -e -n "Test with "
-		echo -e "$1:\n" | cut -c 9-
+		echo -e "\n"
+		echo -e -n "${BUCyan}Test with "
+		echo -e "$1:${White}\n" | cut -c 9-
 		table_header
 		compile_man_test 1
 		./man_test_part1 "$1"
@@ -180,9 +203,13 @@ function test_file {
 }
 
 function mandatory_test {
-	echo -e "${BBlue}Tests for mandatory part:${White}\n"
+	echo -e "${BUBlue}Tests for mandatory part:${White}\n"
 	check_man_file
-	test_file "${FILE_Path}fd_Simple_Input"
+	for file in ${file_man_part}
+	do
+		test_file "$file"
+		echo -e "\n"
+	done
 	rm -f man_test_part1
 }
 
@@ -200,7 +227,7 @@ function check_bonus_file {
 }
 
 function bonus_test {
-	echo -e "${BBlue}Tests for bonus part:${White}\n"
+	echo -e "${BUBlue}Tests for bonus part:${White}\n"
 	check_man_file
 }
 
@@ -211,10 +238,13 @@ function bonus_test {
 ################################################################################
 clear
 if [ "$1" = "m" ]; then
+	launch_norminette
 	mandatory_test
 elif [ "$1" = "b" ]; then
+	launch_norminette
 	bonus_test
 else
+	launch_norminette
 	mandatory_test
 	echo -e "\n\n"
 	bonus_test
