@@ -103,7 +103,7 @@ function launch_norminette {
 	elif [ $? = 1 ]; then
 		echo -e "     ${BRed}[KO]${White}"
 	fi
-	echo -e "\n"
+	echo -e ""
 }
 
 ##############################
@@ -167,7 +167,7 @@ function table_line {
 
 function check_man_file {
 	if [ -e "${GNL_Path}get_next_line.c" ] && [ -e "${GNL_Path}get_next_line_utils.c" ] && [ -e "${GNL_Path}get_next_line.h" ]; then
-		echo -e "${BGrey}Files exist${White}\n"
+		echo -e "	${BGrey}Files exist${White}\n"
 	else
 		echo -e "${BRed}The files of mandatory part do not exist${White}"
 		exit 1
@@ -185,7 +185,6 @@ function compile_man_test {
 
 function test_file {
 	if [ -e "$1" ]; then
-		echo -e "\n"
 		echo -e -n "${BUCyan}Test with "
 		echo -e "$1:${White}\n" | cut -c 9-
 		table_header
