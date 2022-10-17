@@ -97,11 +97,11 @@ function launch_norminette {
 	echo -e "${BUBlue}Run norminette:${White} "
 	norminette ${GNL_Path}* > /dev/null
 	if [ $? = 127 ]; then
-		echo -e "     ${BYellow}[NOT_FOUND]${White}"
+		echo -e "        ${BYellow}[NOT_FOUND]${White}"
 	elif [ $? = 0 ]; then
-		echo -e "     ${BGreen}[OK]${White}"
+		echo -e "        ${BGreen}[OK]${White}"
 	elif [ $? = 1 ]; then
-		echo -e "     ${BRed}[KO]${White}"
+		echo -e "        ${BRed}[KO]${White}"
 	fi
 	echo -e ""
 }
@@ -111,23 +111,19 @@ function launch_norminette {
 ##############################
 
 function table_empty {
-	echo -e "                |             |"
+	echo -e "                    |             |"
 }
 
 function table_header {
-	echo -e "    ${BMagenta}BUFFER_SIZE${White} | ${BBlueL}Result test${White} |  ${BYellow}Leaks${White}"
+	echo -e "        ${BMagenta}BUFFER_SIZE${White} | ${BBlueL}Result test${White} |  ${BYellow}Leaks${White}"
 	table_empty
-}
-
-function table_header_call_gnl {
-	echo -e "    ${BMagenta}NB_CALL_GNL${White} | ${BBlueL}Result test${White} |  ${BYellow}Leaks${White}"
 }
 
 function table_line {
 	is_int "$1"
 	if [ $? = 1 ]; then
 		len_nb=${#1}
-		for (( i=0; i<$((4 + (11 - $len_nb) / 2)); i++ )); do
+		for (( i=0; i<$((8 + (11 - $len_nb) / 2)); i++ )); do
 			echo -e -n " "
 		done
 		echo -e -n "$1"
@@ -170,9 +166,9 @@ function table_line {
 
 function check_man_file {
 	if [ -e "${GNL_Path}get_next_line.c" ] && [ -e "${GNL_Path}get_next_line_utils.c" ] && [ -e "${GNL_Path}get_next_line.h" ]; then
-		echo -e "	${BGrey}Files exist${White}\n"
+		echo -e "        ${BGrey}Files exist${White}\n"
 	else
-		echo -e "${BRed}The files of mandatory part do not exist${White}"
+		echo -e "        ${BRed}The files of mandatory part do not exist${White}"
 		exit 1
 	fi
 }
@@ -283,9 +279,9 @@ function mandatory_test {
 
 function check_bonus_file {
 	if [ -e "${GNL_Path}get_next_line_bonus.c" ] && [ -e "${GNL_Path}get_next_line_utils_bonus.c" ] && [ -e "${GNL_Path}get_next_line_bonus.h" ]; then
-		echo -e "${BGrey}Files exist${White}"
+		echo -e "        ${BGrey}Files exist${White}"
 	else
-		echo -e "${BRed}The files of bonus part do not exist${White}"
+		echo -e "        ${BRed}The files of bonus part do not exist${White}"
 		exit 1
 	fi
 }
