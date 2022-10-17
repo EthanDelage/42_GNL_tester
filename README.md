@@ -17,7 +17,7 @@ git clone https://github.com/EthanDelage/42_Get_Next_Line.git GNL_tester
 ```
 
 ## Run test
-The tests for the bonus part are in progress
+
 Part | Command
 --- | :---:
 Test the mandatory part | ```bash grademe.sh m```
