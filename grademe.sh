@@ -261,7 +261,7 @@ function tests_invalid_buf_size {
 function check_size_read_var {
 	buf_size_var=$(grep -E "read\(" ../GNL/get_next_line.c ../GNL/get_next_line_utils.c | cut -f2- -d ',' | cut -f2- -d ',' | cut -c 2- | rev | cut -c 3- | rev)
 	echo -e "${BUCyan}Check the value of the BUFFER_SIZE argument:${White}\n"
-	echo -e -n "        ${BGrey}value of BUFFER_SIZE argument:${White} ${buf_size_var} "
+	echo -e -n "        ${BGrey}Value of BUFFER_SIZE argument:${White} ${buf_size_var} "
 	if [[ $buf_size_var == "BUFFER_SIZE" ]]; then
 		print_ok
 	else
@@ -292,9 +292,9 @@ function mandatory_test {
 
 function check_bonus_file {
 	if [ -e "${GNL_Path}get_next_line_bonus.c" ] && [ -e "${GNL_Path}get_next_line_utils_bonus.c" ] && [ -e "${GNL_Path}get_next_line_bonus.h" ]; then
-		echo -e "        ${BGrey}Files exist${White}"
+		echo -e "        ${BGrey}Files exist${White}\n"
 	else
-		echo -e "        ${BRed}The files of bonus part do not exist${White}"
+		echo -e "        ${BRed}The files of bonus part do not exist${White}\n"
 		exit 1
 	fi
 }
@@ -345,7 +345,7 @@ function random_bonus_test {
 }
 
 function check_one_static {
-	echo -e "\n${BUCyan}One static variable:${White}\n"
+	echo -e "${BUCyan}One static variable:${White}\n"
 	echo -e -n "        "
 	nb_static_variable=$(cat ${GNL_Path}get_next_line_bonus.c | grep "static" | wc -l)
 	if [ $nb_static_variable = 1 ]; then
@@ -359,6 +359,7 @@ function check_one_static {
 function bonus_test {
 	echo -e "${BUBlue}Tests for bonus part:${White}\n"
 	check_bonus_file
+	check_size_read_var
 	check_one_static
 	random_bonus_test
 	rm -f test_bonus
