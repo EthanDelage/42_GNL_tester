@@ -305,7 +305,7 @@ function compile_bonus {
 }
 
 function random_bonus_test {
-	echo -e "\n${BUCyan}Random test:${White}"
+	echo -e "\n${BUCyan}Random test with 6 file descriptor:${White}"
 	for (( i=0; i<30; i++ ))
 	do
 		rand_call=$(($RANDOM % 100 + 1))
@@ -335,9 +335,22 @@ function random_bonus_test {
 	echo -e "\n"
 }
 
+function check_one_static {
+	echo -e "\n${BUCyan}One static variable:${White}\n"
+	echo -e -n "        "
+	nb_static_variable=$(cat ${GNL_Path}get_next_line_bonus.c | grep "static" | wc -l)
+	if [ $nb_static_variable = 1 ]; then
+		print_ok
+	else
+		print_ko
+	fi
+	echo ""
+}
+
 function bonus_test {
 	echo -e "${BUBlue}Tests for bonus part:${White}\n"
 	check_bonus_file
+	check_one_static
 	random_bonus_test
 	rm -f test_bonus
 }
