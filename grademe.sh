@@ -259,7 +259,7 @@ function tests_invalid_buf_size {
 }
 
 function check_size_read_var {
-	buf_size_var=$(grep -E "read\(" ../GNL/get_next_line.c ../GNL/get_next_line_utils.c | cut -f2- -d ',' | cut -f2- -d ',' | cut -c 2- | rev | cut -c 3- | rev)
+	buf_size_var=$(grep -E "read\(" ../GNL/get_next_line.c ../GNL/get_next_line_utils.c | cut -f2- -d ',' | cut -f2- -d ',' | cut -c 2- | rev | cut -f2- -d ')' | cut -f2- -d ')' | cut -f2- -d ')' | rev)
 	echo -e "${BUCyan}Check the value of the BUFFER_SIZE argument:${White}\n"
 	echo -e -n "        ${BGrey}Value of BUFFER_SIZE argument:${White} ${buf_size_var} "
 	if [[ $buf_size_var == "BUFFER_SIZE" ]]; then
