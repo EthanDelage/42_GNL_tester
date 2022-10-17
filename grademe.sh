@@ -346,7 +346,6 @@ function check_one_static {
 function bonus_test {
 	echo -e "${BUBlue}Tests for bonus part:${White}\n"
 	check_bonus_file
-	check_size_read_var
 	check_one_static
 	random_bonus_test
 	rm -f test_bonus
