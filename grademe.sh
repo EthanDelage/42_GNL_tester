@@ -258,6 +258,38 @@ function tests_invalid_buf_size {
 	table_line 0 $?
 }
 
+function compile_read_not_in_full {
+	is_int $1
+	if [ $? = 1 ]; then
+		is_int $2
+		if [ $? = 1 ]; then
+			gcc -Wall -Wextra -Werror ${gnl_files} ${man_test_file} ${ld_file} -I${GNL_Path} -I${LD_Path} -D NB_CALL_GET_NEXT_LINE=$1 -D BUFFER_SIZE=$2 -o test_rnif
+		else
+			gcc -Wall -Wextra -Werror ${gnl_files} ${man_test_file} ${ld_file} -I${GNL_Path} -I${LD_Path} -D NB_CALL_GET_NEXT_LINE=$1 -o test_rnif
+		fi
+	else
+			gcc -Wall -Wextra -Werror ${gnl_files} ${man_test_file} ${ld_file} -I${GNL_Path} -I${LD_Path} -o test_rnif
+	fi
+}
+
+function check_read_not_in_full {
+	echo -e "\n"
+	echo -e "${BUCyan}Test read_not_in_full:${White}\n"
+	table_header
+	compile_read_not_in_full 1 42
+	./test_rnif "file/fd_Simple_Input"
+	table_line 42 $?
+	compile_read_not_in_full 5 42
+	./test_rnif "file/fd_Simple_Input"
+	table_line 42 $?
+	compile_read_not_in_full 5 10
+	./test_rnif "file/fd_Simple_Input"
+	table_line 10 $?
+	compile_read_not_in_full 3 1
+	./test_rnif "file/fd_Simple_Input"
+	table_line 1 $?
+}
+
 function mandatory_test {
 	echo -e "${BUBlue}Tests for mandatory part:${White}\n"
 	check_man_file
@@ -267,6 +299,8 @@ function mandatory_test {
 		echo -e "\n"
 	done
 	rm -f man_test_part1
+	check_read_not_in_full
+	rm -f test_rnif
 	tests_invalid_fd
 	rm -f test_invalid_fd
 	tests_invalid_buf_size
