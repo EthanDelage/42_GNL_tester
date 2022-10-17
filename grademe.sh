@@ -258,22 +258,9 @@ function tests_invalid_buf_size {
 	table_line 0 $?
 }
 
-function check_size_read_var {
-	buf_size_var=$(grep -E "read\(" ../GNL/get_next_line.c ../GNL/get_next_line_utils.c | cut -f2- -d ',' | cut -f2- -d ',' | cut -c 2- | rev | cut -f2- -d ')' | cut -f2- -d ')' | cut -f2- -d ')' | rev)
-	echo -e "${BUCyan}Check the value of the BUFFER_SIZE argument:${White}\n"
-	echo -e -n "        ${BGrey}Value of BUFFER_SIZE argument:${White} ${buf_size_var} "
-	if [[ $buf_size_var == "BUFFER_SIZE" ]]; then
-		print_ok
-	else
-		print_ko
-	fi
-	echo -e "\n"
-}
-
 function mandatory_test {
 	echo -e "${BUBlue}Tests for mandatory part:${White}\n"
 	check_man_file
-	check_size_read_var
 	for file in ${file_man_part}
 	do
 		test_file "$file"
