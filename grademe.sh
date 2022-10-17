@@ -311,7 +311,7 @@ function random_bonus_test {
 		rand_call=$(($RANDOM % 100 + 1))
 		rand_buf=$(($RANDOM % 100 + 1))
 		if [ $((i%5)) = 0 ]; then
-			echo -e -n "\n    "
+			echo -e -n "\n        "
 		fi
 		compile_bonus $rand_call $rand_buf
 		./test_bonus
