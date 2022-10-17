@@ -67,11 +67,11 @@ function print_ko {
 }
 
 function print_no_leak {
-	echo -e "$BGrey[NO_LK]$White"
+	echo -e -n "$BGrey[NO_LK]$White"
 }
 
 function print_leak {
-	echo -e "$BYellow[LEAKS]$White"
+	echo -e -n "$BYellow[LEAKS]$White"
 }
 
 function print_er {
@@ -79,7 +79,7 @@ function print_er {
 }
 
 function print_error {
-	echo -e "${BYellow}[Error]${White}"
+	echo -e -n "${BYellow}[Error]${White}"
 }
 
 function is_int {
@@ -150,10 +150,13 @@ function table_line {
 		echo -e -n "     | "
 		if [ $2 = 3 ] || [ $2 = 4 ]; then
 			print_leak
+			echo -e -n "\n"
 		elif [ $2 = 0 ] || [ $2 = 1 ]; then
 			print_no_leak
+			echo -e -n "\n"
 		else
 			print_error
+			echo -e -n "\n"
 		fi
 		table_empty
 	else
@@ -280,16 +283,63 @@ function mandatory_test {
 
 function check_bonus_file {
 	if [ -e "${GNL_Path}get_next_line_bonus.c" ] && [ -e "${GNL_Path}get_next_line_utils_bonus.c" ] && [ -e "${GNL_Path}get_next_line_bonus.h" ]; then
-		echo -e "${BGrey}Files exist${White}\n"
+		echo -e "${BGrey}Files exist${White}"
 	else
 		echo -e "${BRed}The files of bonus part do not exist${White}"
 		exit 1
 	fi
 }
 
+function compile_bonus {
+	is_int $1
+	if [ $? = 1 ]; then
+		is_int $2
+		if [ $? = 1 ]; then
+			gcc -Wall -Wextra -Werror ${gnl_bonus_files} ${bonus_test} ${ld_file} -I${GNL_Path} -I${LD_Path} -D NB_CALL_GET_NEXT_LINE=$1 -D BUFFER_SIZE=$2 -o test_bonus
+		else
+			gcc -Wall -Wextra -Werror ${gnl_bonus_files} ${bonus_test} ${ld_file} -I${GNL_Path} -I${LD_Path} -D NB_CALL_GET_NEXT_LINE=$1 -o test_bonus
+		fi
+	else
+		gcc -Wall -Wextra -Werror ${gnl_bonus_files} ${bonus_test} ${ld_file} -I${GNL_Path} -I${LD_Path} -o test_bonus
+	fi
+}
+
+function random_bonus_test {
+	echo -e "\n${BUCyan}Random test:${White}"
+	for (( i=0; i<30; i++ ))
+	do
+		rand_call=$(($RANDOM % 100 + 1))
+		rand_buf=$(($RANDOM % 100 + 1))
+		if [ $((i%5)) = 0 ]; then
+			echo -e -n "\n    "
+		fi
+		compile_bonus $rand_call $rand_buf
+		./test_bonus
+		if [ $? = 0 ] || [ $? = 4 ]; then
+			print_ok
+		elif [ $? = 1 ] || [ $? = 3 ]; then
+			print_ko
+		else
+			print_er
+		fi
+		echo -e -n " "
+		if [ $? = 3 ] || [ $? = 4 ]; then
+			print_leak
+		elif [ $? = 0 ] || [ $? = 1 ]; then
+			print_no_leak
+		else
+			print_error
+		fi
+		echo -e -n " "
+	done
+	echo -e "\n"
+}
+
 function bonus_test {
 	echo -e "${BUBlue}Tests for bonus part:${White}\n"
-	check_man_file
+	check_bonus_file
+	random_bonus_test
+	rm -f test_bonus
 }
 
 ################################################################################
