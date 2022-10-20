@@ -5,7 +5,7 @@ The goal of this project is to test your get_next_line function
 
 ### Clone this repo
 ```shell
-git clone https://github.com/EthanDelage/42_Get_Next_Line.git GNL_tester
+git clone https://github.com/EthanDelage/42_GNL_tester.git GNL_tester
 ```
 ### Clone your repo with get_next_line function
 
