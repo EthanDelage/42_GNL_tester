@@ -8,7 +8,7 @@
 #	Path
 ##############################
 
-GNL_Path="../GNL/"
+GNL_Path="../"
 
 LD_Path="detector_leak/"
 
@@ -41,16 +41,16 @@ bonus_test="gnl_test_bonus.c"
 ##############################
 
 White='\033[0;39m'
-BUWhite='\e[1;4m'
+BUWhite='\033[1;4m'
 BRed='\033[1;31m'
 BGreen='\033[1;92m'
 BYellow='\033[1;93m'
 BBlue='\033[1;34m'
-BBlueL='\e[1;94m'
-BUBlue='\e[1;4;34m'
-BUCyan='\e[1;4;36m'
-BGrey='\e[1;90m'
-BMagenta='\e[1;35m'
+BBlueL='\033[1;94m'
+BUBlue='\033[1;4;34m'
+BUCyan='\033[1;4;36m'
+BGrey='\033[1;90m'
+BMagenta='\033[1;35m'
 
 ################################################################################
 #                                                                              #
